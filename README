@@ -1,3 +1,21 @@
+This is small modification to add several direct function related to syslog:
+  * emergency
+  * alert
+  * critical
+  * error
+  * warn
+  * log
+  * info
+  * debug
+
+This way, you can use it with something like below:
+
+console = require('./syslog');
+console.log("what's up");
+console.debug("something big is going on");
+console.info("nothing happened");
+
+=====================================================
 node-syslog is a simple wrapping of syslog for NodeJS.
 
 http://nodejs.org/api.html#addons-310
