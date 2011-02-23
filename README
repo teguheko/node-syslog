@@ -15,6 +15,9 @@ console.log("what's up");
 console.debug("something big is going on");
 console.info("nothing happened");
 
+Download and build with 
+  node-waf configure build
+
 =====================================================
 node-syslog is a simple wrapping of syslog for NodeJS.
 
