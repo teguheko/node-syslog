@@ -2,6 +2,7 @@
  * Syslog Addon for NodeJS.
  * (c) Copyright 2010 Thorcom Systems Ltd.  All Rights Reserved.
  *
+ * Last-Author:  Teguh Eko Budiarto (e_budiarto@brastel.co.jp, www.brastel.co.jp)
  * Author:  Chris Dew
  * Website: http://www.thorcom.co.uk
  * Contact: cmsdew@gmail.com, http://github.com/chrisdew
@@ -70,7 +71,7 @@ syslogWrapped(const Arguments& args) {
 	  && args[0]->IsInt32()
 	  && args[1]->IsString()
 	   ) {
-		// this constructs a variable called 'str' from arg[0]
+		// this constructs a variable called 'str' from arg[1]
 		String::Utf8Value str(args[1]->ToString());
 		syslog( (int) args[0]->Int32Value()
 			  , "%s"
@@ -85,6 +86,13 @@ syslogWrapped(const Arguments& args) {
 	return Undefined();
 }
 
+const char* syslogWrapped2(const int LOG_TYPE, const v8::String::Utf8Value& val) {
+    syslog( LOG_TYPE
+			  , "%s"
+			  ,	ToCString(val)		// as openlog requires
+			  ) ;
+	return "";
+}
 
 static Handle<Value>
 closelogWrapped(const Arguments& args) {
@@ -93,6 +101,61 @@ closelogWrapped(const Arguments& args) {
 	return Undefined();
 }
 
+static Handle<Value>
+emergency(const Arguments& args) {
+    String::Utf8Value str(args[0]->ToString());
+    syslogWrapped2(LOG_EMERG, str);
+	return Undefined();
+}
+
+static Handle<Value>
+alert(const Arguments& args) {
+    String::Utf8Value str(args[0]->ToString());
+    syslogWrapped2(LOG_ALERT, str);
+	return Undefined();
+}
+
+static Handle<Value>
+critical(const Arguments& args) {
+    String::Utf8Value str(args[0]->ToString());
+    syslogWrapped2(LOG_CRIT, str);
+	return Undefined();
+}
+
+static Handle<Value>
+error(const Arguments& args) {
+    String::Utf8Value str(args[0]->ToString());
+    syslogWrapped2(LOG_ERR, str);
+	return Undefined();
+}
+
+static Handle<Value>
+warn(const Arguments& args) {
+    String::Utf8Value str(args[0]->ToString());
+    syslogWrapped2(LOG_WARNING, str);
+	return Undefined();
+}
+
+static Handle<Value>
+log(const Arguments& args) {
+    String::Utf8Value str(args[0]->ToString());
+    syslogWrapped2(LOG_NOTICE, str);
+	return Undefined();
+}
+
+static Handle<Value>
+info(const Arguments& args) {
+    String::Utf8Value str(args[0]->ToString());
+    syslogWrapped2(LOG_INFO, str);
+	return Undefined();
+}
+
+static Handle<Value>
+debug(const Arguments& args) {
+    String::Utf8Value str(args[0]->ToString());
+    syslogWrapped2(LOG_DEBUG, str);
+	return Undefined();
+}
 
 /**
  * This exists only as an example of returning a value from a function.
@@ -117,6 +180,16 @@ init (Handle<Object> target)
   NODE_SET_METHOD(target, "openlog", openlogWrapped);
   NODE_SET_METHOD(target, "syslog", syslogWrapped);
   NODE_SET_METHOD(target, "closelog", closelogWrapped);
+  NODE_SET_METHOD(target, "emergency", closelogWrapped);
+  NODE_SET_METHOD(target, "alert", alert);
+  NODE_SET_METHOD(target, "critical", critical);
+  NODE_SET_METHOD(target, "error", error);
+  NODE_SET_METHOD(target, "warn", warn);
+  NODE_SET_METHOD(target, "info", info);
+  NODE_SET_METHOD(target, "log", log);
+  NODE_SET_METHOD(target, "debug", debug);
+  
+    
 
   // priorities
   EXPORT_INT32(LOG_EMERG);
